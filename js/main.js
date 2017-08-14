@@ -1,3 +1,14 @@
+// Hello.
+//
+// This is JSHint, a tool that helps to detect errors and potential
+// problems in your JavaScript code.
+//
+// To start, simply enter some JavaScript anywhere on this page. Your
+// report will appear on the right side.
+//
+// Additionally, you can toggle specific options in the Configure
+// menu.
+
 var MapViewModel = function() {
     var self = this;
     var infoWindowContent = '';
@@ -5,7 +16,7 @@ var MapViewModel = function() {
         center: { lat: 40.7413549, lng: -73.9980244 },
         zoom: 18,
         mapTypeControl: false,
-        styles: [{
+        style: [{
                 "elementType": "geometry",
                 "stylers": [{
                     "color": "#f5f5f5"
@@ -153,7 +164,7 @@ var MapViewModel = function() {
             }
         }
         self.populateMarkers();
-    }
+    };
 
     self.removeMarkers = function() {
         for (i = 0; i < self.markers.length; i++) {
@@ -163,7 +174,7 @@ var MapViewModel = function() {
         while (self.markers.length > 0) {
             self.markers.pop();
         }
-    }
+    };
 
 
     self.populateInfoWindow = function(marker, infowindow) {
@@ -175,9 +186,7 @@ var MapViewModel = function() {
                     type: 'GET',
                     dataType: 'jsonp',
                     success: function(response) {
-                        console.log(response)
                         infoWindowContent = "<h3>" + response[0] + "</h3> <p>" + response[2][0] + "</p>";
-                        //clearTimeOut(wikiRequestTimeout);
                     }
                 }).done(function() {
 
@@ -198,7 +207,7 @@ var MapViewModel = function() {
                     });
                 });
         }
-    }
+    };
 
     self.populateMarkers = function() {
         //clear markers array
@@ -225,7 +234,7 @@ var MapViewModel = function() {
             self.markers.push(marker);
         }
         self.renderMarkers();
-    }
+    };
 
     self.renderMarkers = function() {
         // Extend the boundaries of the map for each marker and display the marker
@@ -235,8 +244,8 @@ var MapViewModel = function() {
         }
         self.map.fitBounds(self.bounds);
         self.map.panToBounds(self.bounds);
-    }
-}
+    };
+};
 
 var mView;
 
