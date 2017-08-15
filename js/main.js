@@ -1,5 +1,3 @@
-
-
 var MapViewModel = function() {
     var self = this;
     var infoWindowContent = '';
@@ -204,9 +202,8 @@ var MapViewModel = function() {
         //clear markers array
         self.removeMarkers();
 
-        var length = self.filteredLocations().length;
         // The following group uses the location array to create an array of markers on initialize.
-        self.filteredLocations().forEach (function(item) {
+        self.filteredLocations().forEach(function(item) {
             // Get the position from the location array.
             var position = item.location;
             var title = item.title;
