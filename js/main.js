@@ -206,10 +206,10 @@ var MapViewModel = function() {
 
         var length = self.filteredLocations().length;
         // The following group uses the location array to create an array of markers on initialize.
-        for (var i = 0; i < length; i++) {
+        self.filteredLocations().forEach (function(item) {
             // Get the position from the location array.
-            var position = self.filteredLocations()[i].location;
-            var title = self.filteredLocations()[i].title;
+            var position = item.location;
+            var title = item.title;
             // Create a marker per location, and put into markers array.
             var marker = new google.maps.Marker({
                 position: position,
@@ -223,7 +223,7 @@ var MapViewModel = function() {
             });
             // Push the marker to our array of markers.
             self.markers.push(marker);
-        }
+        });
         self.renderMarkers();
     };
 
