@@ -1,11 +1,11 @@
 var MapViewModel = function() {
-    var self = this;
-    var infoWindowContent = '';
+    let self = this;
+    let infoWindowContent = '';
     self.map = new google.maps.Map(document.getElementById('map'), {
         center: { lat: 40.7413549, lng: -73.9980244 },
         zoom: 18,
         mapTypeControl: false,
-        style: [{
+        styles: [{
                 "elementType": "geometry",
                 "stylers": [{
                     "color": "#f5f5f5"
@@ -166,9 +166,9 @@ var MapViewModel = function() {
     };
 
 
-    self.populateInfoWindow = function(marker, infowindow) {
+    self.populateInfoWindow = function(marker) {
         // Check to make sure the infowindow is not already opened on this marker.
-        if (infowindow.marker != marker) {
+        if (self.infoWindow.marker != marker) {
             $.ajax({
                     url: 'http://en.wikipedia.org/w/api.php',
                     data: { action: 'opensearch', list: 'search', search: marker.title, format: 'json' },
@@ -187,16 +187,17 @@ var MapViewModel = function() {
                 })
                 .always(function() {
                     console.log("complete");
-                    infowindow.marker = marker;
-                    infowindow.setContent('<div>' + infoWindowContent + '</div>');
-                    infowindow.open(map, marker);
+                    self.infoWindow.marker = marker;
+                    self.infoWindow.setContent('<div>' + infoWindowContent + '</div>');
+                    self.infoWindow.open(map, marker);
                     // Make sure the marker property is cleared if the infowindow is closed.
-                    infowindow.addListener('closeclick', function() {
-                        infowindow.marker = null;
+                    self.infoWindow.addListener('closeclick', function() {
+                        self.infoWindow.marker = null;
                     });
                 });
         }
     };
+
 
     self.populateMarkers = function() {
         //clear markers array
@@ -216,7 +217,8 @@ var MapViewModel = function() {
             });
             // Create an onclick event to open an infowindow at each marker.
             marker.addListener('click', function() {
-                self.populateInfoWindow(this, self.infoWindow);
+                self.populateInfoWindow(this);
+                self.animateMarker(marker);
             });
             // Push the marker to our array of markers.
             self.markers.push(marker);
@@ -224,9 +226,26 @@ var MapViewModel = function() {
         self.renderMarkers();
     };
 
+    self.listClick = function(location) {
+        for (let i = 0; i < self.markers.length; i++) {
+            if (self.markers[i].title === location.title) {
+                self.animateMarker(self.markers[i]);
+                self.populateInfoWindow(self.markers[i]);
+            }
+        }
+    };
+    self.animateMarker = function(marker) {
+
+        marker.setAnimation(google.maps.Animation.BOUNCE);
+
+        window.setTimeout(function() {
+            marker.setAnimation(null);
+        }, 750);
+
+    };
     self.renderMarkers = function() {
         // Extend the boundaries of the map for each marker and display the marker
-        for (var i = 0; i < self.markers.length; i++) {
+        for (let i = 0; i < self.markers.length; i++) {
             self.markers[i].setMap(self.map);
             self.bounds.extend(self.markers[i].position);
         }
@@ -243,4 +262,9 @@ function main() {
     mView.query.subscribe(mView.search);
     ko.applyBindings(mView);
 
+}
+
+
+function googleMapOnError() {
+    $("#map").text('Error Loading Map');
 }
